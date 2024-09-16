@@ -46,7 +46,7 @@ jobs:
         run: docker pull btnoj/runtimes
       - name: Install python
         run: |
-          curl -L "https://github.com/btnoj/runtimes-python/releases/latest/download/python${{ matrix.python-version }}-amd64.tar.gz" |
+          curl -L "https://github.com/DMOJ/runtimes-python/releases/latest/download/python${{ matrix.python-version }}-amd64.tar.gz" |
           tar -xz
       - name: Create docker scripts
         run: |
