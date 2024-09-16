@@ -1,2 +1,9 @@
 .git
+.github
+contrib
+testsuite
+.clang-format
+.gitignore
+LICENSE
+README.md
 *.pyc
