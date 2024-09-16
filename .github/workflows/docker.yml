@@ -1,0 +1,33 @@
+name: Build Docker Image
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: '0 0 * * 1'
+jobs:
+  amd64:
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build Docker image
+        run: make TAG=amd64-latest executor
+      - name: Push image to Docker
+        if: (github.event_name == 'push' || github.event_name == 'schedule') && github.ref == 'refs/heads/master'
+        run: |
+          echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USERNAME" --password-stdin
+          docker push btnoj/executor:amd64-latest
+          docker run -v "$(pwd)":/code mplatform/manifest-tool \
+            --username="$DOCKER_USERNAME" --password="$DOCKER_PASSWORD" \
+            push from-spec /code/manifest.yml
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Push images to GitHub Containers
+        if: (github.event_name == 'push' || github.event_name == 'schedule') && github.ref == 'refs/heads/master'
+        run: |
+          echo "$GITHUB_TOKEN" | docker login ghcr.io -u $ --password-stdin
+          docker push ghcr.io/btnoj/executor:amd64-latest
+        env:
+          GITHUB_TOKEN: ${{ secrets.ACTIONS_GRANT }}
