@@ -1,0 +1,7 @@
+image: btnoj/executor:latest
+manifests:
+  -
+    image: btnoj/executor:amd64-latest
+    platform:
+      architecture: amd64
+      os: linux

@@ -7,3 +7,4 @@ testsuite
 LICENSE
 README.md
 *.pyc
+manifest.yml
